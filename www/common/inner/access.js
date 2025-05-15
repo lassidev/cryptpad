@@ -1244,5 +1244,36 @@ define([
         Modal.getModal(common, opts, tabs, cb);
     };
 
+    var toggleFolderAccess = function (folderData) {
+        var spinner = UI.makeSpinner();
+        sframeChan.query('Q_SET_FOLDER_METADATA', {
+            channel: folderData.channel,
+            command: 'RESTRICT_FOLDER_ACCESS',
+            value: [true]
+        }, function (err, res) {
+            if (err) {
+                UI.warn('Failed to update folder access settings.');
+                return;
+            }
+            UI.log('Folder access settings updated.');
+            redrawAll(true);
+        });
+    };
+
+    var drawFolderAccessList = function (folderData) {
+        var allowedList = folderData.allowed || [];
+        allowedList.forEach(function (user) {
+            // Render user/team in the UI
+        });
+
+        var addUserButton = h('button', 'Add User/Team');
+        addUserButton.onclick = function () {
+            // Open a dialog to add users/teams to the folder's access list
+            openAddUserDialog(folderData);
+        };
+
+        return h('div', [h('h3', 'Folder Access List'), addUserButton]);
+    };
+
     return Access;
 });
